@@ -1,6 +1,6 @@
 import { State } from "./state.js";
 
-export const startREPL = (state: State) => {
+export const startREPL = async (state: State) => {
   const { rl, commands: listOfCommands } = state;
 
   rl.prompt();
@@ -18,7 +18,7 @@ export const startREPL = (state: State) => {
 
     if (commandName in listOfCommands) {
       try {
-        cmd.callback(state);
+        await cmd.callback(state);
         rl.prompt();
         return;
       } catch (error) {
