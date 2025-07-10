@@ -8,15 +8,16 @@ export type State = {
   poke: PokeAPI;
   nextLocationsURL: string;
   prevLocationsURL: string;
+  pokedex: Record<string, string>;
 };
 
 export type CLICommand = {
   name: string;
   description: string;
-  callback: (state: State) => Promise<void>;
+  callback: (state: State, ...args: string[]) => Promise<void>;
 };
 
-export function initState(): State {
+export function initState(cacheInterval: number): State {
   const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -26,8 +27,13 @@ export function initState(): State {
   return {
     rl: rl,
     commands: getCommands(),
-    poke: new PokeAPI(),
+    poke: new PokeAPI(cacheInterval),
     nextLocationsURL: "",
     prevLocationsURL: "",
+    pokedex: {},
   };
+}
+
+export function addToPokedex(state: State, pokemonName: string) {
+  state.pokedex[pokemonName] = pokemonName;
 }

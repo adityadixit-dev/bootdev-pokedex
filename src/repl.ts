@@ -15,10 +15,14 @@ export const startREPL = async (state: State) => {
 
     const commandName = words[0];
     const cmd = listOfCommands[commandName];
+    const additionaArguements: string[] = [];
+    if (words.length > 1) {
+      additionaArguements.push(...words.slice(1));
+    }
 
     if (commandName in listOfCommands) {
       try {
-        await cmd.callback(state);
+        await cmd.callback(state, ...additionaArguements);
         rl.prompt();
         return;
       } catch (error) {
